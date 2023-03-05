@@ -1,0 +1,28 @@
+{
+	"name": "@n0bodysec/ts-utils",
+	"version": "1.0.0",
+	"description": "Because reinventing the wheel on every project is not always a good thing.",
+	"main": "lib/index.js",
+	"types": "lib/index.d.ts",
+	"homepage": "https://github.com/n0bodysec/ts-utils#readme",
+	"repository": "https://github.com/n0bodysec/ts-utils.git",
+	"bugs": "https://github.com/n0bodysec/ts-utils/issues",
+	"author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
+	"license": "MIT",
+	"scripts": {
+		"prepublish": "rimraf lib && tsc"
+	},
+	"optionalDependencies": {
+		"colorette": "^2.0.19"
+	},
+	"devDependencies": {
+		"@n0bodysec/eslint-config": "^2.1.0",
+		"@types/node": "^18.14.6",
+		"@typescript-eslint/eslint-plugin": "^5.54.0",
+		"@typescript-eslint/parser": "^5.54.0",
+		"eslint": "^8.35.0",
+		"eslint-plugin-import": "^2.27.5",
+		"rimraf": "^4.3.0",
+		"typescript": "^4.9.5"
+	}
+}
