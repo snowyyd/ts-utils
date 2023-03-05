@@ -10,7 +10,8 @@
 	"author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
 	"license": "MIT",
 	"scripts": {
-		"prepublish": "rimraf lib && tsc"
+		"prepublish": "rimraf lib && tsc",
+		"prepack": "npm run prepublish"
 	},
 	"optionalDependencies": {
 		"colorette": "^2.0.19"
