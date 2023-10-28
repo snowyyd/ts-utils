@@ -1,5 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-let colorette: any;
+let colorette: {
+	green: (text: string | number) => string | number;
+	cyan: (text: string | number) => string | number;
+	yellow: (text: string | number) => string | number;
+	gray: (text: string | number) => string | number;
+};
 
 try
 {
@@ -8,11 +13,12 @@ try
 }
 catch (error)
 {
-	colorette = {};
-	colorette.green = (text: string | number) => text;
-	colorette.cyan = (text: string | number) => text;
-	colorette.yellow = (text: string | number) => text;
-	colorette.gray = (text: string | number) => text;
+	colorette = {
+		green(text: string | number) { return text; },
+		cyan(text: string | number) { return text; },
+		yellow(text: string | number) { return text; },
+		gray(text: string | number) { return text; },
+	};
 }
 
 /**
@@ -28,6 +34,7 @@ export class CustomError extends Error
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	constructor(message: string, extra?: Record<string, unknown>, code?: number, ...params: any)
 	{
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		super(...params);
 
 		if (Error.captureStackTrace) Error.captureStackTrace(this, CustomError);
@@ -50,4 +57,6 @@ export class CustomError extends Error
 		);
 		/* eslint-enable function-call-argument-newline, function-paren-newline */
 	};
+
+	print = () => CustomError.print(this);
 }
