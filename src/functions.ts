@@ -9,7 +9,6 @@ export const randomInt = (min: number, max: number): number => Math.floor(Math.r
 
 /**
  * Asynchronously pauses execution for the specified number of milliseconds.
- * @async
  * @param {Number} ms - The number of milliseconds to wait.
  * @returns {Promise} A Promise that resolves after the specified number of milliseconds have passed.
  */
@@ -17,20 +16,24 @@ export const sleep = (ms: number): Promise<unknown> => new Promise((r) => { setT
 
 /**
  * Add a timeout to a promise.
- * @async
  * @param {Promise} promise - The promise you want to timeout.
  * @param {Number} timeout - Amounf of miliseconds to wait before timeout.
- * @param {Function} rejectFunction - The function you want to eject upon promise rejection.
+ * @param {Function} cb - The callback you want to exec upon promise rejection.
  * @returns {Promise<T>} - A promise.
  */
-export async function promiseTimeout<T>(promise: Promise<T>, timeout: number, rejectFunction: () => unknown): Promise<T>
+export function promiseTimeout<T>(promise: Promise<T>, timeout: number, cb: () => void): Promise<T>
 {
+	let timeoutHandle: number;
+
 	const timeoutPromise = new Promise<T>((_, reject) =>
 	{
-		setTimeout(() => reject(rejectFunction()), timeout);
+		timeoutHandle = setTimeout(() => reject(cb), timeout);
 	});
 
-	return Promise.race([promise, timeoutPromise]);
+	return Promise.race([promise, timeoutPromise]).finally(() =>
+	{
+		clearTimeout(timeoutHandle);
+	});
 }
 
 /**

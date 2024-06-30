@@ -1,6 +1,6 @@
 {
 	"name": "@n0bodysec/ts-utils",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Because reinventing the wheel on every project is not always a good thing.",
 	"main": "lib/index.js",
 	"types": "lib/index.d.ts",
