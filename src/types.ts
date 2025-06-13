@@ -1,3 +1,6 @@
+import type { Static, TSchema } from '@sinclair/typebox';
+import type { TypeCheck } from '@sinclair/typebox/compiler';
+
 /**
  * Object.values() at type level.
  */
@@ -32,3 +35,31 @@ export type OptionalNullable<T> = T | null | undefined;
 export type Prettify<T> = {
 	[K in keyof T]: T[K];
 } & {};
+
+/**
+ * Helper type for extracting the `TSchema` type from a `TypeCheck<TSchema>` instance,
+ * as used in the `@sinclair/typebox` ecosystem.
+ *
+ * This type is useful when working with compiled schemas (e.g. via `TypeCompiler.Compile`)
+ * and you need to access the original schema type.
+ *
+ * @template T - A `TypeCheck<TSchema>`.
+ * @returns The extracted schema type (`TSchema`) or `never` if `T` is not a `TypeCheck`.
+ */
+export type UnwrapTypeCheck<T> = T extends TypeCheck<infer U> ? U : never;
+
+/**
+ * Helper type that resolves to the static TypeScript type of the schema
+ * inside a `TypeCheck<TSchema>` instance from `@sinclair/typebox`.
+ *
+ * @example
+ * ```
+ * const user = Type.Object({ name: Type.String(), age: Type.Number() });
+ * const check = TypeCompiler.Compile(T);
+ * type User = StaticTypeCheck<typeof check>; // { name: string, age: number; }
+ * ```
+ *
+ * @template T - A `TypeCheck<TSchema>`.
+ * @returns The static TypeScript type derived from the schema.
+ */
+export type StaticTypeCheck<T extends TypeCheck<TSchema>> = Static<UnwrapTypeCheck<T>>;
