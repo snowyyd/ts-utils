@@ -16,7 +16,7 @@
 	},
 	"scripts": {
 		"lint": "eslint src/",
-		"build": "tsc",
+		"build": "tsc -p tsconfig.build.json",
 		"prebuild": "rm -rf dist/",
 		"prepack": "pnpm build"
 	},
