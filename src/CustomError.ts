@@ -1,9 +1,11 @@
+import type { ChalkInstance } from 'chalk';
+
 // eslint-disable-next-line import-x/no-extraneous-dependencies
-const mod = await import('colorette').catch(() => undefined);
-const green = mod ? mod.green : (text: string | number) => String(text);
-const cyan = mod ? mod.cyan : (text: string | number) => String(text);
-const yellow = mod ? mod.yellow : (text: string | number) => String(text);
-const gray = mod ? mod.gray : (text: string | number) => String(text);
+const mod = await import('chalk').catch(() => undefined);
+const green = mod ? mod.default.green : ((...text: Parameters<ChalkInstance>) => String(text)) as ChalkInstance;
+const cyan = mod ? mod.default.cyan : ((...text: Parameters<ChalkInstance>) => String(text)) as ChalkInstance;
+const yellow = mod ? mod.default.yellow : ((...text: Parameters<ChalkInstance>) => String(text)) as ChalkInstance;
+const gray = mod ? mod.default.gray : ((...text: Parameters<ChalkInstance>) => String(text)) as ChalkInstance;
 
 /**
  * An universal Error class that contains useful extra parameters.
@@ -42,7 +44,7 @@ export class CustomError extends Error
 
 	static print = (error: CustomError, noColors = false) =>
 	{
-		const fmt = (fn: typeof green, text: Parameters<typeof green>[0]) => (noColors ? text : fn(text));
+		const fmt = (fn: ChalkInstance, ...text: Parameters<ChalkInstance>) => (noColors ? text.join(' ') : fn(...text));
 
 		console.error(fmt(green, 'Date:'), fmt(cyan, error.date.toString()));
 		console.error(fmt(green, 'Message:'), fmt(yellow, error.message));

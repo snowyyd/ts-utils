@@ -21,7 +21,7 @@
 		"prepack": "pnpm build"
 	},
 	"optionalDependencies": {
-		"colorette": "^2.0.20"
+		"chalk": "^5.4.1"
 	},
 	"devDependencies": {
 		"@snowyyd/eslint-config": "^1.2.1",
