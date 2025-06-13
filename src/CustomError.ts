@@ -1,25 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let colorette: {
-	green: (text: string | number) => string | number;
-	cyan: (text: string | number) => string | number;
-	yellow: (text: string | number) => string | number;
-	gray: (text: string | number) => string | number;
-};
-
-try
-{
-	// eslint-disable-next-line
-	colorette = require('colorette');
-}
-catch (error)
-{
-	colorette = {
-		green(text: string | number) { return text; },
-		cyan(text: string | number) { return text; },
-		yellow(text: string | number) { return text; },
-		gray(text: string | number) { return text; },
-	};
-}
+// eslint-disable-next-line import-x/no-extraneous-dependencies
+const mod = await import('colorette').catch(() => undefined);
+const green = mod ? mod.green : (text: string | number) => String(text);
+const cyan = mod ? mod.cyan : (text: string | number) => String(text);
+const yellow = mod ? mod.yellow : (text: string | number) => String(text);
+const gray = mod ? mod.gray : (text: string | number) => String(text);
 
 /**
  * An universal Error class that contains useful extra parameters.
@@ -28,35 +12,44 @@ catch (error)
 export class CustomError extends Error
 {
 	date = new Date();
+
 	extra: Record<string, unknown> | undefined;
+
 	code: number;
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	constructor(message: string, extra?: Record<string, unknown>, code?: number, ...params: any)
+	constructor(message: string, extra?: Record<string, unknown>, code?: number, options?: ErrorOptions)
 	{
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-		super(...params);
+		super(message, options);
 
 		if (Error.captureStackTrace) Error.captureStackTrace(this, CustomError);
 
 		this.name = 'CustomError';
-		this.message = message;
 		this.extra = extra;
 		this.code = code ?? 1;
 	}
 
-	static print = (error: CustomError) =>
+	static toJSON = (error: CustomError) => ({
+		name: error.name,
+		date: error.date,
+		message: error.message,
+		extra: error.extra,
+		code: error.code,
+		stack: error.stack,
+		cause: error.cause,
+	});
+
+	toJSON = () => CustomError.toJSON(this);
+
+	static print = (error: CustomError, noColors = false) =>
 	{
-		/* eslint-disable function-call-argument-newline, function-paren-newline */
-		console.error(
-			colorette.green('Date:'), colorette.cyan(error.date.toString()), '\n',
-			colorette.green('Message:'), colorette.yellow(error.message), '\n',
-			colorette.green('Extras:'), error.extra ?? colorette.gray('(null)'), '\n',
-			colorette.green('Code:'), error.code, '\n',
-			colorette.green('Stack:'), colorette.gray(error.stack ?? '(null)'),
-		);
-		/* eslint-enable function-call-argument-newline, function-paren-newline */
+		const fmt = (fn: typeof green, text: Parameters<typeof green>[0]) => (noColors ? text : fn(text));
+
+		console.error(fmt(green, 'Date:'), fmt(cyan, error.date.toString()));
+		console.error(fmt(green, 'Message:'), fmt(yellow, error.message));
+		console.error(fmt(green, 'Extras:'), error.extra ?? fmt(gray, '(undefined)'));
+		console.error(fmt(green, 'Code:'), error.code);
+		console.error(fmt(green, 'Stack:'), fmt(gray, error.stack ?? '(undefined)'));
 	};
 
-	print = () => CustomError.print(this);
+	print = (noColors = false) => CustomError.print(this, noColors);
 }

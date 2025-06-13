@@ -1,6 +1,5 @@
-export * from './CustomError';
-export * from './constants';
-export * from './functions';
-export * from './types';
+export * from './CustomError.ts';
+export * from './functions.ts';
+export * from './types.ts';
 
 // @ignore-me

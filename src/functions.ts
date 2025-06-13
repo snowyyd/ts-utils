@@ -9,6 +9,7 @@ export const randomInt = (min: number, max: number): number => Math.floor(Math.r
 
 /**
  * Asynchronously pauses execution for the specified number of milliseconds.
+ * @deprecated Use `setTimeout()` from 'node:timers/promises' instead.
  * @param {Number} ms - The number of milliseconds to wait.
  * @returns {Promise} A Promise that resolves after the specified number of milliseconds have passed.
  */
@@ -17,23 +18,22 @@ export const sleep = (ms: number): Promise<unknown> => new Promise((r) => { setT
 /**
  * Add a timeout to a promise.
  * @param {Promise} promise - The promise you want to timeout.
- * @param {Number} timeout - Amounf of miliseconds to wait before timeout.
- * @param {Function} cb - The callback you want to exec upon promise rejection.
+ * @param {Number} timeoutMs - Amounf of miliseconds to wait before timeout.
+ * @param {Function} onTimeout - The callback you want to exec upon promise rejection.
  * @returns {Promise<T>} - A promise.
  */
-export function promiseTimeout<T>(promise: Promise<T>, timeout: number, cb: () => void): Promise<T>
+export function promiseTimeout<T>(promise: Promise<T>, timeoutMs: number, onTimeout: () => never | void): Promise<T>
 {
-	let timeoutHandle: number;
+	let timeoutId: NodeJS.Timeout;
 
-	const timeoutPromise = new Promise<T>((_, reject) =>
+	const timeoutPromise = new Promise<never>((_, reject) =>
 	{
-		timeoutHandle = setTimeout(() => reject(cb), timeout);
+		// eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+		timeoutId = setTimeout(() => { reject(onTimeout()); }, timeoutMs);
 	});
 
-	return Promise.race([promise, timeoutPromise]).finally(() =>
-	{
-		clearTimeout(timeoutHandle);
-	});
+	return Promise.race([promise, timeoutPromise])
+		.finally(() => clearTimeout(timeoutId));
 }
 
 /**
@@ -45,4 +45,4 @@ export function promiseTimeout<T>(promise: Promise<T>, timeout: number, cb: () =
  * @param {number} max - The upper boundary of the output range.
  * @returns {number} - A number in the range [min, max].
  */
-export const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
+export const clamp = (num: number, min: number, max: number): number => Math.min(Math.max(num, min), max);

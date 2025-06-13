@@ -1,29 +1,37 @@
 {
-	"name": "@n0bodysec/ts-utils",
-	"version": "1.0.3",
+	"name": "@snowyyd/ts-utils",
 	"description": "Because reinventing the wheel on every project is not always a good thing.",
-	"main": "lib/index.js",
-	"types": "lib/index.d.ts",
-	"homepage": "https://github.com/n0bodysec/ts-utils#readme",
-	"repository": "https://github.com/n0bodysec/ts-utils.git",
-	"bugs": "https://github.com/n0bodysec/ts-utils/issues",
-	"author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
+	"version": "2.0.0",
+	"type": "module",
+	"homepage": "https://github.com/snowyyd/ts-utils#readme",
+	"repository": "https://github.com/snowyyd/ts-utils.git",
+	"bugs": "https://github.com/snowyyd/ts-utils/issues",
+	"author": "snowyyd <snowyyd@proton.me>",
 	"license": "MIT",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		}
+	},
 	"scripts": {
-		"prepublish": "rimraf lib && tsc",
-		"prepack": "npm run prepublish"
+		"lint": "eslint src/",
+		"build": "tsc",
+		"prebuild": "rm -rf dist/",
+		"prepack": "pnpm build"
 	},
 	"optionalDependencies": {
 		"colorette": "^2.0.20"
 	},
 	"devDependencies": {
-		"@n0bodysec/eslint-config": "^2.1.1",
-		"@types/node": "^20.4.1",
-		"@typescript-eslint/eslint-plugin": "^6.9.0",
-		"@typescript-eslint/parser": "^6.9.0",
-		"eslint": "^8.44.0",
-		"eslint-plugin-import": "^2.27.5",
-		"rimraf": "^5.0.1",
-		"typescript": "^5.1.6"
+		"@snowyyd/eslint-config": "^1.2.1",
+		"@types/node": "^24.0.1",
+		"eslint": "^9.28.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-import-resolver-typescript": "^4.4.3",
+		"eslint-plugin-import": "^2.31.0",
+		"tsx": "^4.20.2",
+		"typescript": "^5.8.3",
+		"typescript-eslint": "^8.34.0"
 	}
 }
