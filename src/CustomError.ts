@@ -9,7 +9,6 @@ const gray = mod ? mod.default.gray : ((...text: Parameters<ChalkInstance>) => S
 
 /**
  * An universal Error class that contains useful extra parameters.
- * @class
  */
 export class CustomError extends Error
 {
