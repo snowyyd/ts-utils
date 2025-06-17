@@ -37,6 +37,34 @@ export type Prettify<T> = {
 } & {};
 
 /**
+ * Creates a discriminated union type from a mapping of keys to object types.
+ *
+ * Given a string key (the discriminator) and a record of variants, this utility produces
+ * a union where each object in the union includes a unique discriminator field set to its key.
+ *
+ * @see {@link https://github.com/sindresorhus/type-fest/blob/5067e25fd52be47a7acd73edb22d05ff2ebf6d45/source/tagged-union.d.ts#L46|type-fest package}
+ * @see {@link https://www.youtube.com/shorts/_Wb8VF-M4go|YouTube Short by Matt Pocock}
+ *
+ * @template TagKey - The name of the property to use as the discriminator (e.g., "type", "kind").
+ * @template T - A record where each key corresponds to a union variant and the value is the object shape for that variant.
+ *
+ * @example
+ * ```ts
+ * type T = TaggedUnion<'type', {
+ *   error: { message: string };
+ *   success: { data: Record<string, unknown> };
+ *   loading: Record<string, never>;
+ * }>;
+ * ```
+ */
+export type TaggedUnion<
+	TagKey extends string,
+	T extends Record<string, Record<string, unknown>>,
+> = {
+	[K in keyof T]: Prettify<Record<TagKey, K> & T[K]>
+}[keyof T];
+
+/**
  * Helper type for extracting the `TSchema` type from a `TypeCheck<TSchema>` instance,
  * as used in the `@sinclair/typebox` ecosystem.
  *
