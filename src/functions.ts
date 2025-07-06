@@ -22,7 +22,7 @@ export const sleep = (ms: number): Promise<unknown> => new Promise((r) => { setT
  * @param onTimeout - The callback you want to exec upon promise rejection.
  * @returns - A promise.
  */
-export function promiseTimeout<T>(promise: Promise<T>, timeoutMs: number, onTimeout: () => never | void): Promise<T>
+export function promiseTimeout<T>(promise: Promise<T>, timeoutMs: number, onTimeout: () => never | void)
 {
 	let timeoutId: NodeJS.Timeout;
 

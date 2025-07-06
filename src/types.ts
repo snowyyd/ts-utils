@@ -49,7 +49,7 @@ export type Prettify<T> = {
  * @template T - A record where each key corresponds to a union variant and the value is the object shape for that variant.
  *
  * @example
- * ```ts
+ * ```
  * type T = TaggedUnion<'type', {
  *   error: { message: string };
  *   success: { data: Record<string, unknown> };
